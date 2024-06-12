@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content%}
+
+<main class="single-page-tubers">
+    <div class="banner">
+      <img src="{% static './assets/images/bg-banner.png'%}" alt="" class="img-fluid w-100">
+      <h1 class="text-center">
+        Tubers
+      </h1>
+    </div>
+
+
+
+    <section class="head container mt-5 mb-5">
+      <div class="row">
+        <div class="col-md-4 d-flex justify-content-center align-items-center">
+          <h1 class="text-center">{{ ytuber.name }}</h1>
+        </div>
+        <div class="col-md-4 d-flex justify-content-center align-items-center">
+          <h1 class="text-accent text-center">
+            ${{ ytuber.price }}
+          </h1>
+        </div>
+        <div class="col-md-4 d-flex justify-content-center align-items-center">
+          <img src="{{ytuber.photo.url}}" class="img-fluid" alt="team-member">
+        </div>
+      </div>
+    </section>
+    <section class="video container text-center">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ytuber.video_url}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </section>
+    <section class="descritpion container">
+      <h4>Descritpion</h4>
+      <p class="mt-2 mb-2">{{ ytuber.description | safe }}</p>
+
+      
+
+    </section>
+
+    <section class="container w-50">
+
+      <div class="person-description mt-2">
+        <button class="btn btn-accent">{{ ytuber.city }}  </button>
+        <button class="btn btn-accent">{{ ytuber.age }}  </button>
+        <button class="btn btn-accent">{{ ytuber.height }}  </button>
+      </div>
+      <div class="person-description mt-2">
+        <button class="btn btn-accent">{{ ytuber.crew }}  </button>
+        <button class="btn btn-accent">{{ ytuber.camera_type }}  </button>
+        <button class="btn btn-accent">{{ ytuber.subs_count }}  </button>
+      </div>
+
+    </section>
+
+    <section class="youtuber-form container mt-5 mb-5">
+      <div class="row">
+        <form class="col-md-8 offset-md-2" method="POST" action="{% url 'hiretubers' %}">
+          <h3 class="pt-2 pb-2">Fill the Form and reach out</h3>
+          {% csrf_token %}
+
+          {% if user.is_authenticated %}
+          <input type="hidden" name="user_id" value="{{user.id}}">
+          {% else %}
+          <input type="hidden" name="user_id" value="00">
+          {% endif %}
+
+          <input type="hidden" name="tuber_id" value="{{ytuber.id}}">
+
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <input type="text" class="form-control" placeholder="First Name" name="firstname" required>
+            </div>
+            <div class="form-group col-md-4">
+              <input type="text" class="form-control" placeholder="Last Name" name="lastname" required>
+            </div>
+            <div class="form-group col-md-4">
+
+              {% if user.is_authenticated %}
+              <input type="email" class="form-control" value="{{user.email}}" name="email">
+            
+              {% else %}
+              <input type="email" class="form-control" placeholder="Email" name="email">
+            
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <select class="form-control" name="tuber_name">
+              <option selected disabled hidden>Select Tuber Name</option>
+              
+                <option value="{{ytuber.name}}">{{ytuber.name}}</option>
+              
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <input type="text" class="form-control" placeholder="City" name="city" required>
+            </div>
+            <div class="form-group col-md-4">
+              <input type="text" class="form-control" placeholder="State" name="state" required>
+            </div>
+            <div class="form-group col-md-4">
+              <input type="number" class="form-control" placeholder="Phone Number" name="phone" required>
+            </div>
+
+          </div>
+
+          <div class="form-group pt-2">
+            <textarea class="form-control" rows="3" placeholder="Details Message" name="message" required></textarea>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-accent">Contact Us</button>
+          </div>
+
+        </form>
+      </div>
+
+    </section>
+
+  </main>
+
+{% endblock %}
